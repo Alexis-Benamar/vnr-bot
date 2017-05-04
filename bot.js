@@ -28,6 +28,7 @@ function mentioned(eventMsg) {
         tweet.in_reply_to_status_id = id;
 
         switch (text) {
+
             case 'poste une image stp':
 
                 tweet.status = "ça c'est moi en vrai";
@@ -51,8 +52,14 @@ function mentioned(eventMsg) {
                     }
                 }
                 break;
+
             case 'tractopelle':
                 tweet.status = '@' + from + " replying to " + from.replace('@', '') + "'s tractopelle";
+                tweetIt(tweet);
+                break;
+
+            case 'go maintenance':
+                tweet.status = "y'a tout cassé";
                 tweetIt(tweet);
                 break;
             default:
