@@ -31,7 +31,7 @@ function mentioned(eventMsg) {
 
             case 'poste une image stp':
 
-                tweet.status = "ça c'est moi en vrai";
+                tweet.status = '@' + from + " ça c'est moi en vrai";
 
                 console.log('opening image...');
                 var image_path = './img-test.jpg';
