@@ -52,11 +52,11 @@ function mentioned(eventMsg) {
                 }
                 break;
             case 'tractopelle':
-                tweet.status = '@' + from + " replying to " + from_name + "'s tractopelle";
+                tweet.status = '@' + from + " replying to " + from.replace('@', '') + "'s tractopelle";
                 tweetIt(tweet);
                 break;
             default:
-                tweet.status = '@' + from + ' bonsoir ' + from_name;
+                tweet.status = '@' + from + ' bonsoir ' + from.replace('@', '');
                 tweetIt(tweet);
                 break;
         }
