@@ -16,6 +16,8 @@ var T = new Twit(config);
 var stream = T.stream('user');
 stream.on('tweet', mentioned);
 
+var ananas_stream = T.stream('statuses/filter', { track: '', language: 'en' }),
+
 function mentioned(eventMsg) {
     var replyTo = eventMsg.in_reply_to_screen_name;
     var id = eventMsg.id_str;
@@ -25,7 +27,7 @@ function mentioned(eventMsg) {
 
     var tweet = {};
 
-    if(replyTo === 'vnrbot'){
+    if(replyTo === 'vnrbot' && from != "vnrbot"){
         tweet.in_reply_to_status_id = id;
 
         switch (text) {
