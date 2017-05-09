@@ -28,21 +28,22 @@ function mentioned(eventMsg) {
         var from = eventMsg.user.screen_name;
         var from_name = eventMsg.user.name;
 
-        var tweet = {};
+        var tweet = {}; // initializing response tweet
 
-        if(eventMsg.entities.hasOwnProperty("user_mentions")){
-            if(eventMsg.entities.user_mentions[0].screen_name === 'vnrbot'){
+        if(eventMsg.entities.hasOwnProperty("user_mentions")){                  // check if there are mentions inside the tweet
+            if(eventMsg.entities.user_mentions[0].screen_name === 'vnrbot'){    // If the first mention = @vnrbot
                 console.log('MENTIONNED by: ' + eventMsg.user.screen_name);
                 console.log('Tweet: ' + eventMsg.text);
-                if(eventMsg.entities.hasOwnProperty('hashtags')){
-                    if(eventMsg.entities.hashtags.length > 0){
-                        if(eventMsg.entities.hashtags[0].text === 'vnrthis'){
+                if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
+                    if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
+                        if(eventMsg.entities.hashtags[0].text === 'vnrthis'){   // If the 1st hashtag = #vnrthis
                             console.log('-> vnrthis');
                             tweet.in_reply_to_status_id = id;
                             tweet.status = '@' + from + ' soon';
                             tweetIt(tweet);
                         }
                     } else {
+                        // Default reply
                         tweet.in_reply_to_status_id = id;
                         tweet.status = '@' + from + ' bonsoir ' + from.replace('@', '');
                         tweetIt(tweet);
