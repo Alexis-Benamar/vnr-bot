@@ -19,61 +19,37 @@ stream.on('tweet', mentioned);
 // regex to use later -> [a-zA-ZÀ-ÿ0-9 .!,;:|\[\(\{\}#~&)\]\\/@_\-=+'"?]*ananas\b[ \-.?!]*$
 
 function mentioned(eventMsg) {
-    var replyTo = eventMsg.in_reply_to_screen_name;
-    var id = eventMsg.id_str;
-    var text = eventMsg.text.replace('@vnrbot ', '');
-    var from = eventMsg.user.screen_name;
-    var from_name = eventMsg.user.name;
 
-    var tweet = {};
+    if(!(eventMsg.user.screen_name === 'vnrbot')){
 
-    if(replyTo === 'vnrbot'){
-        tweet.in_reply_to_status_id = id;
+        var replyTo = eventMsg.in_reply_to_screen_name;
+        var id = eventMsg.id_str;
+        var text = eventMsg.text.replace('@vnrbot ', '');
+        var from = eventMsg.user.screen_name;
+        var from_name = eventMsg.user.name;
 
-        switch (text) {
+        var tweet = {};
 
-            case '#vnrthis':
-                tweet.status = "soon";
-                tweetIt(tweet);
-                break;
-
-            case 'poste une image stp':
-                tweet.status = '@' + from + " ça c'est moi en vrai";
-
-                console.log('opening image...');
-                var image_path = './img-test.jpg';
-                var b64content = fs.readFileSync(image_path, { encoding: 'base64' });
-
-                console.log('uploading image...');
-                T.post('media/upload', { media_data: b64content }, uploaded);
-
-                function uploaded(err, data, response) {
-                    if(err){
-                        console.log('ERROR:');
-                        console.log(err);
+        if(eventMsg.entities.hasOwnProperty("user_mentions")){
+            if(eventMsg.entities.user_mentions[0].screen_name === 'vnrbot'){
+                console.log('MENTIONNED by: ' + eventMsg.user.screen_name);
+                console.log('Tweet: ' + eventMsg.text);
+                if(eventMsg.entities.hasOwnProperty('hashtags')){
+                    if(eventMsg.entities.hashtags.length > 0){
+                        if(eventMsg.entities.hashtags[0].text === 'vnrthis'){
+                            console.log('-> vnrthis');
+                            tweet.in_reply_to_status_id = id;
+                            tweet.status = '@' + from + ' soon';
+                            tweetIt(tweet);
+                        }
                     } else {
-                        console.log('image uploaded');
-                        console.log('tweeting image...');
-                        tweet.media_ids = new Array(data.media_id_string);
+                        tweet.in_reply_to_status_id = id;
+                        tweet.status = '@' + from + ' bonsoir ' + from.replace('@', '');
                         tweetIt(tweet);
                     }
                 }
-                break;
-
-            case 'tractopelle':
-                tweet.status = '@' + from + " replying to " + from.replace('@', '') + "'s tractopelle";
-                tweetIt(tweet);
-                break;
-
-            case 'go maintenance':
-                tweet.status = "y'a tout cassé";
-                tweetIt(tweet);
-                break;
-
-            default:
-                tweet.status = '@' + from + ' bonsoir ' + from.replace('@', '');
-                tweetIt(tweet);
-                break;
+                console.log('-----------------------');
+            }
         }
     }
 };
@@ -87,7 +63,7 @@ function tweetIt(tweet) {
             console.log('Something went wrong');
             console.log(err);
         } else {
-            console.log('new tweet: ' + data.text);
+            console.log('NEW TWEET: ' + data.text);
         }
     };
 }
