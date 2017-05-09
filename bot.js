@@ -3,6 +3,7 @@ console.log('henlo');
 var Twit = require('twit');
 // keys are stored as variable environnements.
 // check config-dummy.js to see what keys are needed.
+// var config = require('./config');
 var config = {
     consumer_key:         process.env.consumer_key,
     consumer_secret:      process.env.consumer_secret,
@@ -57,7 +58,6 @@ function mentioned(eventMsg) {
                 tweet.status = '@' + from + " replying to " + from.replace('@', '') + "'s tractopelle";
                 tweetIt(tweet);
                 break;
-
             case 'go maintenance':
                 tweet.status = "y'a tout cassé";
                 tweetIt(tweet);
