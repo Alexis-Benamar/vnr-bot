@@ -16,7 +16,7 @@ var T = new Twit(config);
 var stream = T.stream('user');
 stream.on('tweet', mentioned);
 
-var ananas_stream = T.stream('statuses/filter', { track: '', language: 'en' }),
+// regex to use later -> [a-zA-ZÀ-ÿ0-9 .!,;:|\[\(\{\}#~&)\]\\/@_\-=+'"?]*ananas\b[ \-.?!]*$
 
 function mentioned(eventMsg) {
     var replyTo = eventMsg.in_reply_to_screen_name;
@@ -27,13 +27,17 @@ function mentioned(eventMsg) {
 
     var tweet = {};
 
-    if(replyTo === 'vnrbot' && from != "vnrbot"){
+    if(replyTo === 'vnrbot'){
         tweet.in_reply_to_status_id = id;
 
         switch (text) {
 
-            case 'poste une image stp':
+            case '#vnrthis':
+                tweet.status = "soon";
+                tweetIt(tweet);
+                break;
 
+            case 'poste une image stp':
                 tweet.status = '@' + from + " ça c'est moi en vrai";
 
                 console.log('opening image...');
@@ -60,10 +64,12 @@ function mentioned(eventMsg) {
                 tweet.status = '@' + from + " replying to " + from.replace('@', '') + "'s tractopelle";
                 tweetIt(tweet);
                 break;
+
             case 'go maintenance':
                 tweet.status = "y'a tout cassé";
                 tweetIt(tweet);
                 break;
+
             default:
                 tweet.status = '@' + from + ' bonsoir ' + from.replace('@', '');
                 tweetIt(tweet);
