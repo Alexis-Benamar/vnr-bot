@@ -16,6 +16,9 @@ var T = new Twit(config);
 var stream = T.stream('user');
 stream.on('tweet', mentioned);
 
+var vnrbot_stream = T.stream('statuses/filter', { track: 'vnrbot'});
+vnrbot_stream.on('tweet', called);
+
 // regex to use later -> [a-zA-ZÀ-ÿ0-9 .!,;:|\[\(\{\}#~&)\]\\/@_\-=+'"?]*ananas\b[ \-.?!]*$
 
 function mentioned(eventMsg) {
@@ -55,6 +58,37 @@ function mentioned(eventMsg) {
     }
 };
 
+
+function called(eventMsg) {
+
+    if(!(eventMsg.user.screen_name === 'vnrbot')) {
+
+        var replyTo = eventMsg.in_reply_to_screen_name;
+        var id = eventMsg.id_str;
+        var text = eventMsg.text.replace('@vnrbot ', '');
+        var from = eventMsg.user.screen_name;
+        var from_name = eventMsg.user.name;
+
+        var tweet = {};
+
+        if(eventMsg.entities.hasOwnProperty('user_mentions')) {
+            if(eventMsg.entities.user_mentions.length > 0) {
+                if(!(eventMsg.entities.user_mentions[0].screen_name === "vnrbot")){
+                    tweet.in_reply_to_status_id = id;
+                    tweet.status = '@' + from + ' henlo';
+                    tweetIt(tweet);
+                }
+            } else {
+                tweet.in_reply_to_status_id = id;
+                tweet.status = '@' + from + ' henlo';
+                tweetIt(tweet);
+            }
+        }
+    }
+
+}
+
+
 function tweetIt(tweet) {
 
     T.post('statuses/update', tweet, tweeted);
@@ -67,4 +101,5 @@ function tweetIt(tweet) {
             console.log('NEW TWEET: ' + data.text);
         }
     };
+
 }
