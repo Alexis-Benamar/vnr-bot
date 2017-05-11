@@ -39,3 +39,6 @@ jspm_packages
 # Skipping config file & version log folder
 config.js
 log/
+tweet.json
+images/
+auto-images/
