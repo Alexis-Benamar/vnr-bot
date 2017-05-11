@@ -11,12 +11,21 @@ var config = {
     access_token:         process.env.access_token,
     access_token_secret:  process.env.access_token_secret
 };
-var fs = require('fs');
-var T = new Twit(config);
 
+// FILE SYSTEM ON
+var fs = require('fs');
+fs.readdir('images', function(err){
+    if(err) {
+        console.log('/images not found, creating folder...');
+        fs.mkdir('images');
+    }
+});
+
+
+// TWITTER STREAMS ON
+var T = new Twit(config);
 var stream = T.stream('user');
 stream.on('tweet', mentioned);
-
 var vnrbot_stream = T.stream('statuses/filter', { track: 'vnrbot'});
 vnrbot_stream.on('tweet', called);
 
