@@ -16,8 +16,8 @@ var config = {
 var fs = require('fs');
 fs.readdir('images', function(err){
     if(err) {
-        console.log('/images not found, creating folder...');
-        fs.mkdir('images');
+        console.log(err);
+        fs.mkdir('/images');
     }
 });
 
