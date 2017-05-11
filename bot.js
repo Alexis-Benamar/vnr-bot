@@ -1,15 +1,16 @@
 console.log('henlo');
 
+var request = require('request');
 var Twit = require('twit');
 // keys are stored as variable environnements.
 // check config-dummy.js to see what keys are needed.
-// var config = require('./config');
-var config = {
-    consumer_key:         process.env.consumer_key,
-    consumer_secret:      process.env.consumer_secret,
-    access_token:         process.env.access_token,
-    access_token_secret:  process.env.access_token_secret
-};
+var config = require('./config');
+// var config = {
+//     consumer_key:         process.env.consumer_key,
+//     consumer_secret:      process.env.consumer_secret,
+//     access_token:         process.env.access_token,
+//     access_token_secret:  process.env.access_token_secret
+// };
 var fs = require('fs');
 var T = new Twit(config);
 
@@ -41,9 +42,40 @@ function mentioned(eventMsg) {
                     if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
                         if(eventMsg.entities.hashtags[0].text === 'vnrthis'){   // If the 1st hashtag = #vnrthis
                             console.log('-> vnrthis');
-                            tweet.in_reply_to_status_id = id;
-                            tweet.status = '@' + from + ' soon';
-                            tweetIt(tweet);
+
+                            if(eventMsg.hasOwnProperty('extended_entities')){
+                                if(eventMsg.extended_entities.media.length > 0){
+                                    console.log('media type: ' + eventMsg.extended_entities.media[0].type);
+                                    json_tweet = JSON.stringify(eventMsg, null, 2);
+                                    fs.writeFile('tweet.json', json_tweet);
+
+                                    if(!(eventMsg.extended_entities.media[0].type === "photo")){
+                                        var params = {
+                                            encoding: 'base64'
+                                        }
+                                        var b64_image = fs.readFileSync('auto-images/rip.jpg', params);
+                                        T.post('media/upload', { media_data: b64_image }, function (err, data, response){
+                                            tweet.media_ids = new Array(data.media_id_string);
+                                            tweet.in_reply_to_status_id = id;
+                                            tweet.status = '@' + from + ' sry, no gifs / videos allowed';
+                                            tweetIt(tweet);
+                                        });
+                                    } else {
+                                        request.get(eventMsg.extended_entities.media[0].media_url, function(error, response, body){
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                console.log('statusCode: ' + response.statusCode);
+                                                console.log('Content-Type: ' + response.headers['content-type']);
+                                            }
+                                        }).pipe(fs.createWriteStream('images/' + eventMsg.extended_entities.media[0].id_str + '-' + id + '.png'));
+                                        tweet.in_reply_to_status_id = id;
+                                        tweet.status = '@' + from + ' soon';
+                                        tweetIt(tweet);
+                                    }
+                                }
+                            }
+
                         }
                     } else {
                         // Default reply
@@ -87,7 +119,6 @@ function called(eventMsg) {
     }
 
 }
-
 
 function tweetIt(tweet) {
 
