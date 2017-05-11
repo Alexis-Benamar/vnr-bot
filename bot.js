@@ -93,7 +93,6 @@ function mentioned(eventMsg) {
                         tweetIt(tweet);
                     }
                 }
-                console.log('-----------------------');
             }
         }
     }
@@ -139,6 +138,7 @@ function tweetIt(tweet) {
             console.log(err);
         } else {
             console.log('NEW TWEET: ' + data.text);
+            console.log('-----------------------');
         }
     };
 
