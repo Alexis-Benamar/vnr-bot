@@ -77,7 +77,7 @@ function mentioned(eventMsg) {
                                                 console.log('statusCode: ' + response.statusCode);
                                                 console.log('Content-Type: ' + response.headers['content-type']);
                                             }
-                                        }).pipe(fs.createWriteStream('images/' + eventMsg.extended_entities.media[0].id_str + '-' + id + '.png'));
+                                        }).pipe(fs.createWriteStream('auto-images/' + eventMsg.extended_entities.media[0].id_str + '-' + id + '.png'));
                                         tweet.in_reply_to_status_id = id;
                                         tweet.status = '@' + from + ' soon';
                                         tweetIt(tweet);
