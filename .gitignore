@@ -40,3 +40,5 @@ jspm_packages
 config.js
 log/
 tweet.json
+images/
+auto-images/
