@@ -14,12 +14,12 @@ var config = {
 
 // FILE SYSTEM ON
 var fs = require('fs');
-fs.readdir('images', function(err){
-    if(err) {
-        console.log(err);
-        fs.mkdir('/images');
-    }
-});
+// fs.readdir('images', function(err){
+//     if(err) {
+//         console.log(err);
+//         fs.mkdir('/images');
+//     }
+// });
 
 
 // TWITTER STREAMS ON
@@ -56,7 +56,7 @@ function mentioned(eventMsg) {
                                 if(eventMsg.extended_entities.media.length > 0){
                                     console.log('media type: ' + eventMsg.extended_entities.media[0].type);
                                     json_tweet = JSON.stringify(eventMsg, null, 2);
-                                    fs.writeFile('tweet.json', json_tweet);
+                                    // fs.writeFile('tweet.json', json_tweet);
 
                                     if(!(eventMsg.extended_entities.media[0].type === "photo")){
                                         var params = {
@@ -77,7 +77,8 @@ function mentioned(eventMsg) {
                                                 console.log('statusCode: ' + response.statusCode);
                                                 console.log('Content-Type: ' + response.headers['content-type']);
                                             }
-                                        }).pipe(fs.createWriteStream('auto-images/' + eventMsg.extended_entities.media[0].id_str + '-' + id + '.png'));
+                                        });
+                                        //.pipe(fs.createWriteStream('auto-images/' + eventMsg.extended_entities.media[0].id_str + '-' + id + '.png'));
                                         tweet.in_reply_to_status_id = id;
                                         tweet.status = '@' + from + ' soon';
                                         tweetIt(tweet);
