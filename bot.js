@@ -112,6 +112,9 @@ function called(eventMsg) {
 
         var tweet = {};
 
+        console.log('NAME SAID by: ' + eventMsg.user.screen_name);
+        console.log('Tweet: ' + eventMsg.text);
+
         if(eventMsg.entities.hasOwnProperty('user_mentions')) {
             if(eventMsg.entities.user_mentions.length > 0) {
                 if(!(eventMsg.entities.user_mentions[0].screen_name === "vnrbot")){
