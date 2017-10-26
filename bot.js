@@ -4,7 +4,7 @@ var request = require('request');
 var Twit = require('twit');
 // keys are stored as variable environnements.
 // check config-dummy.js to see what keys are needed.
-// var config = require('./config');
+//var config = require('./config');
 var config = {
     consumer_key:         process.env.consumer_key,
     consumer_secret:      process.env.consumer_secret,
@@ -21,16 +21,137 @@ var fs = require('fs');
 //     }
 // });
 
-
-// TWITTER STREAMS ON
+//Initializing twitter bot
 var T = new Twit(config);
+
+//Listened streams
 var stream = T.stream('user');
+var negan_bot_stream = T.stream('statuses/filter', { follow: ['918196580443918336']});
+
+//RequestsQueue
+var requests = [];
+
+//start streams
 stream.on('tweet', mentioned);
-var vnrbot_stream = T.stream('statuses/filter', { track: 'vnrbot'});
-vnrbot_stream.on('tweet', called);
+negan_bot_stream.on('tweet', neganTweeted);
 
-// regex to use later -> [a-zA-ZÀ-ÿ0-9 .!,;:|\[\(\{\}#~&)\]\\/@_\-=+'"?]*ananas\b[ \-.?!]*$
 
+/*
+ * React to a tweet mentioning @vnrbot
+ * Add a request to the request queue
+ */
+function mentioned(eventMsg)
+{
+    if ( !(eventMsg.user.screen_name === 'vnrbot') && eventMsg.is_quote_status == false )
+    {
+        if (eventMsg.entities.hasOwnProperty('user_mentions')) {
+            if (eventMsg.entities.user_mentions.length > 0) {
+                if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
+                {
+                    console.log('- New query by: ', eventMsg.user.screen_name);
+                    console.log('- "'+eventMsg.text+'"');
+
+                    requests.push({
+                        'id': eventMsg.timestamp_ms,
+                        'from': eventMsg.user.screen_name,
+                        'tweet_id': eventMsg.id_str,
+                        'tweet_text': eventMsg.text
+                    });
+                }
+            }
+        }
+    }
+}
+
+
+/*
+ * Favorites every tweet from @IamNeggan
+ */
+function neganTweeted(eventMsg)
+{
+    console.log("- IamNeggan tweeted: ", eventMsg.text);
+
+    T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
+        if (err) {
+            console.log("- Error when faving: \n", err);
+        } else {
+            console.log("- Favorited successfully");
+        }
+    });
+}
+
+
+/*
+ * Uploads a new tweet.
+ */
+function tweetIt(tweet)
+{
+    T.post('statuses/update', tweet, tweeted);
+
+    function tweeted(err, data, response){
+        if (err) {
+            console.log('/!\\ Error when tweeting.');
+            console.log(err);
+            return false;
+        } else {
+            console.log('- Replied: ' + data.text);
+            return true;
+        }
+    };
+}
+
+
+/*
+ * Saves last recieved tweet in a json file
+ */
+function saveTweet(eventMsg)
+{
+    var json_tweet = JSON.stringify(eventMsg, null, 2);
+    fs.writeFile('tweet.json', json_tweet, function(err) {
+        if(err) {
+            console.log("- Error when writing json file: \n", err);
+        } else {
+            console.log("- Saved tweet successfully");
+        }
+    });
+}
+
+
+/*
+ * MAIN LOOP
+ * Handle 1 requests every 10 seconds
+ */
+setInterval(function () {
+    console.log("Requests: \n", requests, "\n");
+    if (requests.length > 0)
+    {
+        handleRequest(requests);
+    }
+}, 10000);
+
+
+/*
+ * Request handler
+ * Currently just reply "henlo" to the tweet
+ */
+function handleRequest(requests) {
+    req = requests[0];
+
+    var reply_tweet = {
+        'in_reply_to_status_id': req.tweet_id,
+        'status': '@'+ req.from + ' henlo'
+    }
+
+    tweetIt(reply_tweet);
+
+    //remove handled request
+    requests.splice(requests.indexOf(req), 1);
+}
+
+
+/*
+ * OLD MENTIONED FUNCTION
+ *
 function mentioned(eventMsg) {
 
     if(!(eventMsg.user.screen_name === 'vnrbot')){
@@ -97,53 +218,4 @@ function mentioned(eventMsg) {
             }
         }
     }
-};
-
-
-function called(eventMsg) {
-
-    if(!(eventMsg.user.screen_name === 'vnrbot')) {
-
-        var replyTo = eventMsg.in_reply_to_screen_name;
-        var id = eventMsg.id_str;
-        var text = eventMsg.text.replace('@vnrbot ', '');
-        var from = eventMsg.user.screen_name;
-        var from_name = eventMsg.user.name;
-
-        var tweet = {};
-
-        console.log('NAME SAID by: ' + eventMsg.user.screen_name);
-        console.log('Tweet: ' + eventMsg.text);
-
-        if(eventMsg.entities.hasOwnProperty('user_mentions')) {
-            if(eventMsg.entities.user_mentions.length > 0) {
-                if(!(eventMsg.entities.user_mentions[0].screen_name === "vnrbot")){
-                    tweet.in_reply_to_status_id = id;
-                    tweet.status = '@' + from + ' henlo';
-                    tweetIt(tweet);
-                }
-            } else {
-                tweet.in_reply_to_status_id = id;
-                tweet.status = '@' + from + ' henlo';
-                tweetIt(tweet);
-            }
-        }
-    }
-
-}
-
-function tweetIt(tweet) {
-
-    T.post('statuses/update', tweet, tweeted);
-
-    function tweeted(err, data, response) {
-        if (err) {
-            console.log('Something went wrong');
-            console.log(err);
-        } else {
-            console.log('NEW TWEET: ' + data.text);
-            console.log('-----------------------');
-        }
-    };
-
-}
+};*/
