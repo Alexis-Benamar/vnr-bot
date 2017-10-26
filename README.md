@@ -4,13 +4,14 @@ _An angry bot that makes your images even more angry_
 
 ---
 ### How VNRbot works:
-1. You give it an image by tweeting '@vnrbot #angrierpls'
-2. It sends it back with a red tint and a light horizontal motion blur.  
+1. You give it an image by tweeting '@vnrbot #vnrthis'
+2. It sends it back with a red tint and a light radial motion blur. (yeah i know)
 
 <br>
 
 ### Currently: 
 
+It may encounter problems due to the read-only file system it's hosted on.
 Tweets nothing but replying **'bonsoir'** when you @ it. It can post an image if you use the right words.
 
 <br>
