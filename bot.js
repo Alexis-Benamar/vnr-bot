@@ -137,6 +137,9 @@ setInterval(function () {
 function handleRequest(requests) {
     req = requests[0];
 
+    //remove handled request
+    requests.splice(requests.indexOf(req), 1);
+
     var reply_tweet = {
         'in_reply_to_status_id': req.tweet_id,
         'status': '@'+ req.from + ' henlo'
@@ -144,8 +147,6 @@ function handleRequest(requests) {
 
     tweetIt(reply_tweet);
 
-    //remove handled request
-    requests.splice(requests.indexOf(req), 1);
 }
 
 
