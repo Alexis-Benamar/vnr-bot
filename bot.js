@@ -1,10 +1,10 @@
-console.log('henlo');
+console.log('henlo\n');
 
 var request = require('request');
 var Twit = require('twit');
 // keys are stored as variable environnements.
 // check config-dummy.js to see what keys are needed.
-//var config = require('./config');
+// var config = require('./config');
 var config = {
     consumer_key:         process.env.consumer_key,
     consumer_secret:      process.env.consumer_secret,
@@ -48,15 +48,27 @@ function mentioned(eventMsg)
             if (eventMsg.entities.user_mentions.length > 0) {
                 if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
                 {
-                    console.log('- New query by: ', eventMsg.user.screen_name);
-                    console.log('- "'+eventMsg.text+'"');
+                    var tweetMsg = eventMsg.text.replace('@vnrbot ', '');
 
-                    requests.push({
-                        'id': eventMsg.timestamp_ms,
-                        'from': eventMsg.user.screen_name,
-                        'tweet_id': eventMsg.id_str,
-                        'tweet_text': eventMsg.text
-                    });
+                    switch(tweetMsg){
+
+                        case '!newEp':
+                            console.log('- New Episode');
+                            randomEp(eventMsg);
+                            break;
+
+                        default:
+                            console.log('- New query by: ', eventMsg.user.screen_name);
+                            console.log('- "'+eventMsg.text+'"\n');
+
+                            requests.push({
+                                'id': eventMsg.timestamp_ms,
+                                'from': eventMsg.user.screen_name,
+                                'tweet_id': eventMsg.id_str,
+                                'tweet_text': eventMsg.text
+                            });
+                            break;
+                    }
                 }
             }
         }
@@ -94,7 +106,7 @@ function tweetIt(tweet)
             console.log(err);
             return false;
         } else {
-            console.log('- Replied: ' + data.text);
+            console.log('- Replied: ' + data.text + '\n');
             return true;
         }
     };
@@ -146,7 +158,41 @@ function handleRequest(requests) {
     }
 
     tweetIt(reply_tweet);
+}
 
+
+/*
+ * Pick random show to watch (rdm Season & rdm Episode)
+ */
+function randomEp(eventMsg)
+{
+    var seriesList;
+    fs.readFile('series.json', function (err, data) {
+        if(err) throw err;
+        else
+        {
+            var seriesList = JSON.parse(data);
+
+            //select rdm episode
+            var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
+            var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
+            var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
+
+            console.log('rdm show: ' + rdmShow.name);
+            console.log('rdm season: ' + rdmSeason);
+            console.log('rdm ep: ' + rdmEpisode + "\n");
+
+            var tweet = {
+                'in_reply_to_status_id': eventMsg.id_str,
+                'status':   '@' + eventMsg.user.screen_name + '\n' +
+                            '\nShow: ' + rdmShow.name +
+                            '\nSeason ' + rdmSeason +
+                            '\nEpisode ' + rdmEpisode + '\n'
+            };
+
+            tweetIt(tweet);
+        }
+    });
 }
 
 
