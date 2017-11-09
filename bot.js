@@ -56,17 +56,26 @@ function mentioned(eventMsg)
                             console.log('- New Episode');
                             randomEp(eventMsg);
                             break;
+                        case '#vnrthis':
+                            if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
+                                if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
+                                    if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
+                                    {
+                                        console.log('- New query by: ', eventMsg.user.screen_name);
+                                        console.log('- "'+eventMsg.text+'"\n');
+
+                                        requests.push({
+                                            'id': eventMsg.timestamp_ms,
+                                            'from': eventMsg.user.screen_name,
+                                            'tweet_id': eventMsg.id_str,
+                                            'tweet_text': eventMsg.text
+                                        });
+                                    }
+                                }
+                            }
+                            break;
 
                         default:
-                            console.log('- New query by: ', eventMsg.user.screen_name);
-                            console.log('- "'+eventMsg.text+'"\n');
-
-                            requests.push({
-                                'id': eventMsg.timestamp_ms,
-                                'from': eventMsg.user.screen_name,
-                                'tweet_id': eventMsg.id_str,
-                                'tweet_text': eventMsg.text
-                            });
                             break;
                     }
                 }
@@ -133,7 +142,8 @@ function saveTweet(eventMsg)
  * MAIN LOOP
  * Handle 1 requests every 10 seconds
  */
-setInterval(function () {
+setInterval(function ()
+{
     console.log("Requests: \n", requests, "\n");
     if (requests.length > 0)
     {
@@ -146,7 +156,8 @@ setInterval(function () {
  * Request handler
  * Currently just reply "henlo" to the tweet
  */
-function handleRequest(requests) {
+function handleRequest(requests)
+{
     req = requests[0];
 
     //remove handled request
