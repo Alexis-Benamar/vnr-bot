@@ -4,13 +4,13 @@ var request = require('request');
 var Twit = require('twit');
 // keys are stored as variable environnements.
 // check config-dummy.js to see what keys are needed.
-// var config = require('./config');
-var config = {
-    consumer_key:         process.env.consumer_key,
-    consumer_secret:      process.env.consumer_secret,
-    access_token:         process.env.access_token,
-    access_token_secret:  process.env.access_token_secret
-};
+var config = require('./config');
+// var config = {
+//     consumer_key:         process.env.consumer_key,
+//     consumer_secret:      process.env.consumer_secret,
+//     access_token:         process.env.access_token,
+//     access_token_secret:  process.env.access_token_secret
+// };
 
 // FILE SYSTEM ON
 var fs = require('fs');
@@ -54,7 +54,7 @@ function mentioned(eventMsg)
                         // todo : look only for first word (splitting spaces of the message into an array)
 
                         case '!ne':
-                            console.log('+ New Episode');
+                            console.log('+ NEW EPISODE');
                             randomEp(eventMsg);
                             break;
                         case '#vnrthis':
@@ -62,8 +62,8 @@ function mentioned(eventMsg)
                                 if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
                                     if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
                                     {
-                                        console.log('+ New query by: ', eventMsg.user.screen_name);
-                                        console.log('+ "'+eventMsg.text);
+                                        console.log('+ NEW EPISODE by: ', eventMsg.user.screen_name);
+                                        console.log('+ "'+eventMsg.text+'"\n');
 
                                         requests.push({
                                             'id': eventMsg.timestamp_ms,
@@ -91,13 +91,13 @@ function mentioned(eventMsg)
  */
 function neganTweeted(eventMsg)
 {
-    console.log("- IamNeggan tweeted: ", eventMsg.text);
+    console.log("+ IamNeggan tweeted: ", eventMsg.text);
 
     T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
         if (err) {
-            console.log("- Error when faving: \n", err);
+            console.log("+ Error when faving: \n", err);
         } else {
-            console.log("- Favorited successfully");
+            console.log("+ Favorited successfully");
         }
     });
 }
@@ -116,7 +116,8 @@ function tweetIt(tweet)
             console.log(err);
             return false;
         } else {
-            console.log('+ Replied: ' + data.text + '\n');
+            console.log('+ REPLIED: ' + data.text + '\n');
+
             return true;
         }
     };
@@ -145,7 +146,6 @@ function saveTweet(eventMsg)
  */
 setInterval(function ()
 {
-    console.log("Requests: \n", requests);
     if (requests.length > 0)
     {
         handleRequest(requests);
@@ -160,6 +160,7 @@ setInterval(function ()
 function handleRequest(requests)
 {
     req = requests[0];
+    console.log("+ HANDLING REQUEST \"" + req.tweet_text + "\"");
 
     //remove handled request
     requests.splice(requests.indexOf(req), 1);
@@ -189,10 +190,6 @@ function randomEp(eventMsg)
             var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
             var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
-
-            console.log('+ rdm show: ' + rdmShow.name);
-            console.log('+ rdm season: ' + rdmSeason);
-            console.log('+ rdm ep: ' + rdmEpisode);
 
             var tweet = {
                 'in_reply_to_status_id': eventMsg.id_str,
