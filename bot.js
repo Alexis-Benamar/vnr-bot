@@ -51,8 +51,9 @@ function mentioned(eventMsg)
                     var tweetMsg = eventMsg.text.replace('@vnrbot ', '');
 
                     switch(tweetMsg){
+                        // todo : look only for first word (splitting spaces of the message into an array)
 
-                        case '!newEp':
+                        case '!ne':
                             console.log('- New Episode');
                             randomEp(eventMsg);
                             break;
