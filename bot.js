@@ -54,7 +54,7 @@ function mentioned(eventMsg)
                         // todo : look only for first word (splitting spaces of the message into an array)
 
                         case '!ne':
-                            console.log('- New Episode');
+                            console.log('+ New Episode');
                             randomEp(eventMsg);
                             break;
                         case '#vnrthis':
@@ -62,8 +62,8 @@ function mentioned(eventMsg)
                                 if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
                                     if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
                                     {
-                                        console.log('- New query by: ', eventMsg.user.screen_name);
-                                        console.log('- "'+eventMsg.text+'"\n');
+                                        console.log('+ New query by: ', eventMsg.user.screen_name);
+                                        console.log('+ "'+eventMsg.text);
 
                                         requests.push({
                                             'id': eventMsg.timestamp_ms,
@@ -116,7 +116,7 @@ function tweetIt(tweet)
             console.log(err);
             return false;
         } else {
-            console.log('- Replied: ' + data.text + '\n');
+            console.log('+ Replied: ' + data.text + '\n');
             return true;
         }
     };
@@ -145,7 +145,7 @@ function saveTweet(eventMsg)
  */
 setInterval(function ()
 {
-    console.log("Requests: \n", requests, "\n");
+    console.log("Requests: \n", requests);
     if (requests.length > 0)
     {
         handleRequest(requests);
@@ -190,9 +190,9 @@ function randomEp(eventMsg)
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
             var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
 
-            console.log('rdm show: ' + rdmShow.name);
-            console.log('rdm season: ' + rdmSeason);
-            console.log('rdm ep: ' + rdmEpisode + "\n");
+            console.log('+ rdm show: ' + rdmShow.name);
+            console.log('+ rdm season: ' + rdmSeason);
+            console.log('+ rdm ep: ' + rdmEpisode);
 
             var tweet = {
                 'in_reply_to_status_id': eventMsg.id_str,
