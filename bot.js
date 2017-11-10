@@ -48,9 +48,9 @@ function mentioned(eventMsg)
             if (eventMsg.entities.user_mentions.length > 0) {
                 if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
                 {
-                    var tweetMsg = eventMsg.text.replace('@vnrbot ', '');
+                    var triggerString = eventMsg.text.split(" ");
 
-                    switch(tweetMsg){
+                    switch(triggerString[1]){
                         // todo : look only for first word (splitting spaces of the message into an array)
 
                         case '!ne':
