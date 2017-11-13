@@ -100,13 +100,16 @@ function mentioned(eventMsg)
             }
         } else {
             // Fav the tweet that quoted it
-            T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
-                if (err) {
-                    console.log("+ Error when faving: \n", err);
-                } else {
-                    console.log("+ Favorited successfully");
-                }
-            });
+            if(eventMsg.quoted_status.user.screen_name === "vnrbot")
+            {
+                T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
+                    if (err) {
+                        console.log("+ Error when faving: \n", err);
+                    } else {
+                        console.log("+ Favorited successfully");
+                    }
+                });
+            }
         }
     }
 }
