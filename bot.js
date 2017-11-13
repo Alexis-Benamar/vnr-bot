@@ -2,17 +2,18 @@ console.log('henlo\n');
 
 var request = require('request');
 var Twit = require('twit');
-// keys are stored as variable environnements.
-// check config-dummy.js to see what keys are needed.
-var config = require('./config');
-// var config = {
-//     consumer_key:         process.env.consumer_key,
-//     consumer_secret:      process.env.consumer_secret,
-//     access_token:         process.env.access_token,
-//     access_token_secret:  process.env.access_token_secret
-// };
 
-// FILE SYSTEM ON
+// Keys are stored as variable environnements.
+// Check config-dummy.js to see what keys are needed.
+//var config = require('./config');
+var config = {
+    consumer_key:         process.env.consumer_key,
+    consumer_secret:      process.env.consumer_secret,
+    access_token:         process.env.access_token,
+    access_token_secret:  process.env.access_token_secret
+};
+
+// File system on
 var fs = require('fs');
 // fs.readdir('images', function(err){
 //     if(err) {
@@ -21,17 +22,17 @@ var fs = require('fs');
 //     }
 // });
 
-//Initializing twitter bot
+// Initializing twitter bot
 var T = new Twit(config);
 
-//Listened streams
+// Listened streams
 var stream = T.stream('user');
 var negan_bot_stream = T.stream('statuses/filter', { follow: ['918196580443918336']});
 
-//RequestsQueue
+// RequestsPool
 var requests = [];
 
-//start streams
+// Start twitter streams
 stream.on('tweet', mentioned);
 negan_bot_stream.on('tweet', neganTweeted);
 
@@ -42,21 +43,27 @@ negan_bot_stream.on('tweet', neganTweeted);
  */
 function mentioned(eventMsg)
 {
+    // React only if tweet is sent by someone else than vnrbot
     if ( !(eventMsg.user.screen_name === 'vnrbot') && eventMsg.is_quote_status == false )
     {
+        // Confirm that the tweets has a 'vnrbot' mention
+        // and is the first mention of the tweet
         if (eventMsg.entities.hasOwnProperty('user_mentions')) {
             if (eventMsg.entities.user_mentions.length > 0) {
                 if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
                 {
+                    // Look at the first word that is not a mention
+                    // "@vnrbot !test" would get '!test' selected
                     var triggerString = eventMsg.text.split(" ");
-
                     switch(triggerString[1]){
-                        // todo : look only for first word (splitting spaces of the message into an array)
 
+                        // New Episode trigger
                         case '!ne':
                             console.log('+ NEW EPISODE');
                             randomEp(eventMsg);
                             break;
+
+                        // New request trigger
                         case '#vnrthis':
                             if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
                                 if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
@@ -76,6 +83,7 @@ function mentioned(eventMsg)
                             }
                             break;
 
+                        // Todo: "You should look at how I work" if trigger is not correct
                         default:
                             break;
                     }
@@ -114,6 +122,7 @@ function tweetIt(tweet)
         if (err) {
             console.log('/!\\ Error when tweeting.');
             console.log(err);
+
             return false;
         } else {
             console.log('+ REPLIED: ' + data.text + '\n');
@@ -159,10 +168,11 @@ setInterval(function ()
  */
 function handleRequest(requests)
 {
+    // Get first request from requests pool
     req = requests[0];
     console.log("+ HANDLING REQUEST \"" + req.tweet_text + "\"");
 
-    //remove handled request
+    // Remove handled request
     requests.splice(requests.indexOf(req), 1);
 
     var reply_tweet = {
@@ -184,9 +194,10 @@ function randomEp(eventMsg)
         if(err) throw err;
         else
         {
+            // Get series data from readfile response
             var seriesList = JSON.parse(data);
 
-            //select rdm episode
+            // select rdm episode
             var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
             var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
