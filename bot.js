@@ -1,3 +1,10 @@
+/*
+ * TODO LIST
+ * - Add fav when quoted
+ * - Add 'this is how I work' reply when not tweeted correctly
+ */
+
+
 console.log('henlo\n');
 
 var request = require('request');
@@ -83,7 +90,6 @@ function mentioned(eventMsg)
                             }
                             break;
 
-                        // Todo: "You should look at how I work" if trigger is not correct
                         default:
                             console.log("+ Default Reply");
                             defaultReply(eventMsg);
