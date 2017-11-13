@@ -119,7 +119,6 @@ function mentioned(eventMsg)
  */
 function defaultReply(eventMsg)
 {
-    saveTweet(eventMsg);
     var tweet = {};
     var params = {
         encoding: 'base64'
