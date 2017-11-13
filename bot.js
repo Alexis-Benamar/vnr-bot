@@ -5,13 +5,13 @@ var Twit = require('twit');
 
 // Keys are stored as variable environnements.
 // Check config-dummy.js to see what keys are needed.
-//var config = require('./config');
-var config = {
-    consumer_key:         process.env.consumer_key,
-    consumer_secret:      process.env.consumer_secret,
-    access_token:         process.env.access_token,
-    access_token_secret:  process.env.access_token_secret
-};
+var config = require('./config');
+// var config = {
+//     consumer_key:         process.env.consumer_key,
+//     consumer_secret:      process.env.consumer_secret,
+//     access_token:         process.env.access_token,
+//     access_token_secret:  process.env.access_token_secret
+// };
 
 // File system on
 var fs = require('fs');
@@ -59,7 +59,7 @@ function mentioned(eventMsg)
 
                         // New Episode trigger
                         case '!ne':
-                            console.log('+ NEW EPISODE');
+                            console.log('+ New EPISODE by ', eventMsg.user.screen_name);
                             randomEp(eventMsg);
                             break;
 
@@ -69,7 +69,7 @@ function mentioned(eventMsg)
                                 if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
                                     if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
                                     {
-                                        console.log('+ NEW EPISODE by: ', eventMsg.user.screen_name);
+                                        console.log('+ New REQUEST by: ', eventMsg.user.screen_name);
                                         console.log('+ "'+eventMsg.text+'"\n');
 
                                         requests.push({
