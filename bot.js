@@ -170,7 +170,9 @@ function handleRequest(requests)
 {
     // Get first request from requests pool
     req = requests[0];
-    console.log("+ HANDLING REQUEST " + req.id "\n");
+    console.log("+ HANDLING REQUEST " + req.id + "\n" +
+                "+ From: " + req.from + "\n" +
+                "+ Text: \""+ req.tweet_text + "\"");
 
     // Remove handled request
     requests.splice(requests.indexOf(req), 1);
