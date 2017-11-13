@@ -1,8 +1,12 @@
 {
-  "created_at": "Thu Oct 26 10:39:36 +0000 2017",
-  "id": 923499347496579100,
-  "id_str": "923499347496579075",
-  "text": "@vnrbot allo",
+  "created_at": "Mon Nov 13 12:33:55 +0000 2017",
+  "id": 930051097753894900,
+  "id_str": "930051097753894912",
+  "text": "@vnrbot !ne https://t.co/exIa9ptk2p",
+  "display_text_range": [
+    0,
+    11
+  ],
   "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
   "truncated": false,
   "in_reply_to_status_id": null,
@@ -17,17 +21,17 @@
     "screen_name": "Cacti___",
     "location": "Rouen, France",
     "url": "https://alexis-benamar.github.io/",
-    "description": "Multi-Thread Drifting | A3 @eXiaCesiRouen",
+    "description": "Ford Escort game stronk | A4 @eXiaCesiRouen",
     "translator_type": "none",
     "protected": false,
     "verified": false,
-    "followers_count": 209,
-    "friends_count": 1402,
+    "followers_count": 214,
+    "friends_count": 1420,
     "listed_count": 6,
-    "favourites_count": 21128,
-    "statuses_count": 43141,
+    "favourites_count": 21632,
+    "statuses_count": 43671,
     "created_at": "Tue Feb 28 11:29:28 +0000 2012",
-    "utc_offset": 7200,
+    "utc_offset": 3600,
     "time_zone": "Ljubljana",
     "geo_enabled": true,
     "lang": "fr",
@@ -42,8 +46,8 @@
     "profile_sidebar_fill_color": "DDEEF6",
     "profile_text_color": "333333",
     "profile_use_background_image": true,
-    "profile_image_url": "http://pbs.twimg.com/profile_images/917732062400040960/hQ3mKM7W_normal.jpg",
-    "profile_image_url_https": "https://pbs.twimg.com/profile_images/917732062400040960/hQ3mKM7W_normal.jpg",
+    "profile_image_url": "http://pbs.twimg.com/profile_images/925371066603790336/oD7bTydQ_normal.jpg",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/925371066603790336/oD7bTydQ_normal.jpg",
     "profile_banner_url": "https://pbs.twimg.com/profile_banners/507244882/1507574148",
     "default_profile": false,
     "default_profile_image": false,
@@ -55,14 +59,193 @@
   "coordinates": null,
   "place": null,
   "contributors": null,
-  "is_quote_status": false,
+  "quoted_status_id": 930047670621794300,
+  "quoted_status_id_str": "930047670621794304",
+  "quoted_status": {
+    "created_at": "Mon Nov 13 12:20:18 +0000 2017",
+    "id": 930047670621794300,
+    "id_str": "930047670621794304",
+    "text": "@Cacti___ j'ai pas compris dsl https://t.co/d3gNeBsIxX",
+    "display_text_range": [
+      10,
+      30
+    ],
+    "source": "<a href=\"https://alexis-benamar.github.io\" rel=\"nofollow\">VNRbot</a>",
+    "truncated": false,
+    "in_reply_to_status_id": 930047656302383100,
+    "in_reply_to_status_id_str": "930047656302383104",
+    "in_reply_to_user_id": 507244882,
+    "in_reply_to_user_id_str": "507244882",
+    "in_reply_to_screen_name": "Cacti___",
+    "user": {
+      "id": 859770633881878500,
+      "id_str": "859770633881878528",
+      "name": "vnrbot",
+      "screen_name": "vnrbot",
+      "location": "soon",
+      "url": null,
+      "description": "angry bot that make your images even more angry. made by @Cacti___",
+      "translator_type": "none",
+      "protected": false,
+      "verified": false,
+      "followers_count": 13,
+      "friends_count": 2,
+      "listed_count": 0,
+      "favourites_count": 19,
+      "statuses_count": 372,
+      "created_at": "Wed May 03 14:04:27 +0000 2017",
+      "utc_offset": null,
+      "time_zone": null,
+      "geo_enabled": false,
+      "lang": "fr",
+      "contributors_enabled": false,
+      "is_translator": false,
+      "profile_background_color": "F5F8FA",
+      "profile_background_image_url": "",
+      "profile_background_image_url_https": "",
+      "profile_background_tile": false,
+      "profile_link_color": "1DA1F2",
+      "profile_sidebar_border_color": "C0DEED",
+      "profile_sidebar_fill_color": "DDEEF6",
+      "profile_text_color": "333333",
+      "profile_use_background_image": true,
+      "profile_image_url": "http://pbs.twimg.com/profile_images/859775788287242240/mWtIG_0i_normal.jpg",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/859775788287242240/mWtIG_0i_normal.jpg",
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/859770633881878528/1493821495",
+      "default_profile": true,
+      "default_profile_image": false,
+      "following": null,
+      "follow_request_sent": null,
+      "notifications": null
+    },
+    "geo": null,
+    "coordinates": null,
+    "place": null,
+    "contributors": null,
+    "is_quote_status": false,
+    "quote_count": 2,
+    "reply_count": 0,
+    "retweet_count": 0,
+    "favorite_count": 1,
+    "entities": {
+      "hashtags": [],
+      "urls": [],
+      "user_mentions": [
+        {
+          "screen_name": "Cacti___",
+          "name": "🍁 Cacti 🍂",
+          "id": 507244882,
+          "id_str": "507244882",
+          "indices": [
+            0,
+            9
+          ]
+        }
+      ],
+      "symbols": [],
+      "media": [
+        {
+          "id": 930047666314195000,
+          "id_str": "930047666314194946",
+          "indices": [
+            31,
+            54
+          ],
+          "media_url": "http://pbs.twimg.com/media/DOgxbMbWsAIWNbp.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/DOgxbMbWsAIWNbp.jpg",
+          "url": "https://t.co/d3gNeBsIxX",
+          "display_url": "pic.twitter.com/d3gNeBsIxX",
+          "expanded_url": "https://twitter.com/vnrbot/status/930047670621794304/photo/1",
+          "type": "photo",
+          "sizes": {
+            "small": {
+              "w": 680,
+              "h": 639,
+              "resize": "fit"
+            },
+            "thumb": {
+              "w": 150,
+              "h": 150,
+              "resize": "crop"
+            },
+            "large": {
+              "w": 1004,
+              "h": 943,
+              "resize": "fit"
+            },
+            "medium": {
+              "w": 1004,
+              "h": 943,
+              "resize": "fit"
+            }
+          }
+        }
+      ]
+    },
+    "extended_entities": {
+      "media": [
+        {
+          "id": 930047666314195000,
+          "id_str": "930047666314194946",
+          "indices": [
+            31,
+            54
+          ],
+          "media_url": "http://pbs.twimg.com/media/DOgxbMbWsAIWNbp.jpg",
+          "media_url_https": "https://pbs.twimg.com/media/DOgxbMbWsAIWNbp.jpg",
+          "url": "https://t.co/d3gNeBsIxX",
+          "display_url": "pic.twitter.com/d3gNeBsIxX",
+          "expanded_url": "https://twitter.com/vnrbot/status/930047670621794304/photo/1",
+          "type": "photo",
+          "sizes": {
+            "small": {
+              "w": 680,
+              "h": 639,
+              "resize": "fit"
+            },
+            "thumb": {
+              "w": 150,
+              "h": 150,
+              "resize": "crop"
+            },
+            "large": {
+              "w": 1004,
+              "h": 943,
+              "resize": "fit"
+            },
+            "medium": {
+              "w": 1004,
+              "h": 943,
+              "resize": "fit"
+            }
+          }
+        }
+      ]
+    },
+    "favorited": false,
+    "retweeted": false,
+    "possibly_sensitive": false,
+    "filter_level": "low",
+    "lang": "fr"
+  },
+  "is_quote_status": true,
   "quote_count": 0,
   "reply_count": 0,
   "retweet_count": 0,
   "favorite_count": 0,
   "entities": {
     "hashtags": [],
-    "urls": [],
+    "urls": [
+      {
+        "url": "https://t.co/exIa9ptk2p",
+        "expanded_url": "https://twitter.com/vnrbot/status/930047670621794304",
+        "display_url": "twitter.com/vnrbot/status/…",
+        "indices": [
+          12,
+          35
+        ]
+      }
+    ],
     "user_mentions": [
       {
         "screen_name": "vnrbot",
@@ -79,7 +262,8 @@
   },
   "favorited": false,
   "retweeted": false,
+  "possibly_sensitive": false,
   "filter_level": "low",
-  "lang": "es",
-  "timestamp_ms": "1509014376888"
+  "lang": "und",
+  "timestamp_ms": "1510576435875"
 }

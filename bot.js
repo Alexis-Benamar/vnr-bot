@@ -1,6 +1,5 @@
 /*
  * TODO LIST
- * - Add fav when quoted
  * - Add 'this is how I work' reply when not tweeted correctly
  */
 
@@ -51,52 +50,63 @@ negan_bot_stream.on('tweet', neganTweeted);
 function mentioned(eventMsg)
 {
     // React only if tweet is sent by someone else than vnrbot
-    if ( !(eventMsg.user.screen_name === 'vnrbot') && eventMsg.is_quote_status == false )
+    if (!(eventMsg.user.screen_name === 'vnrbot'))
     {
-        // Confirm that the tweets has a 'vnrbot' mention
-        // and is the first mention of the tweet
-        if (eventMsg.entities.hasOwnProperty('user_mentions')) {
-            if (eventMsg.entities.user_mentions.length > 0) {
-                if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
-                {
-                    // Look at the first word that is not a mention
-                    // "@vnrbot !test" would get '!test' selected
-                    var triggerString = eventMsg.text.split(" ");
-                    switch(triggerString[1]){
+        if(!(eventMsg.is_quote_status)){
+            // Confirm that the tweets has a 'vnrbot' mention
+            // and is the first mention of the tweet
+            if (eventMsg.entities.hasOwnProperty('user_mentions')) {
+                if (eventMsg.entities.user_mentions.length > 0) {
+                    if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
+                    {
+                        // Look at the first word that is not a mention
+                        // "@vnrbot !test" would get '!test' selected
+                        var triggerString = eventMsg.text.split(" ");
+                        switch(triggerString[1]){
 
-                        // New Episode trigger
-                        case '!ne':
-                            console.log('+ New EPISODE by ', eventMsg.user.screen_name);
-                            randomEp(eventMsg);
-                            break;
+                            // New Episode trigger
+                            case '!ne':
+                                console.log('+ New EPISODE by ', eventMsg.user.screen_name);
+                                randomEp(eventMsg);
+                                break;
 
-                        // New request trigger
-                        case '#vnrthis':
-                            if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
-                                if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
-                                    if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
-                                    {
-                                        console.log('+ New REQUEST by: ', eventMsg.user.screen_name);
-                                        console.log('+ "'+eventMsg.text+'"\n');
+                            // New request trigger
+                            case '#vnrthis':
+                                if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
+                                    if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
+                                        if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
+                                        {
+                                            console.log('+ New REQUEST by: ', eventMsg.user.screen_name);
+                                            console.log('+ "'+eventMsg.text+'"\n');
 
-                                        requests.push({
-                                            'id': eventMsg.timestamp_ms,
-                                            'from': eventMsg.user.screen_name,
-                                            'tweet_id': eventMsg.id_str,
-                                            'tweet_text': eventMsg.text
-                                        });
+                                            requests.push({
+                                                'id': eventMsg.timestamp_ms,
+                                                'from': eventMsg.user.screen_name,
+                                                'tweet_id': eventMsg.id_str,
+                                                'tweet_text': eventMsg.text
+                                            });
+                                        }
                                     }
                                 }
-                            }
-                            break;
+                                break;
 
-                        default:
-                            console.log("+ Default Reply");
-                            defaultReply(eventMsg);
-                            break;
+                            default:
+                                console.log("+ Default Reply");
+                                defaultReply(eventMsg);
+                                break;
+                        }
                     }
                 }
             }
+        } else {
+            // Fav the tweet that quoted it
+            T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
+                if (err) {
+                    console.log("+ Error when faving: \n", err);
+                } else {
+                    console.log("+ Favorited successfully");
+                }
+            });
         }
     }
 }
@@ -106,6 +116,7 @@ function mentioned(eventMsg)
  */
 function defaultReply(eventMsg)
 {
+    saveTweet(eventMsg);
     var tweet = {};
     var params = {
         encoding: 'base64'
@@ -168,7 +179,7 @@ function saveTweet(eventMsg)
         if(err) {
             console.log("- Error when writing json file: \n", err);
         } else {
-            console.log("- Saved tweet successfully");
+            console.log("- Saved tweet successfully\n");
         }
     });
 }
