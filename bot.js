@@ -5,13 +5,13 @@ var Twit = require('twit');
 
 // Keys are stored as variable environnements.
 // Check config-dummy.js to see what keys are needed.
-var config = require('./config');
-// var config = {
-//     consumer_key:         process.env.consumer_key,
-//     consumer_secret:      process.env.consumer_secret,
-//     access_token:         process.env.access_token,
-//     access_token_secret:  process.env.access_token_secret
-// };
+//var config = require('./config');
+var config = {
+    consumer_key:         process.env.consumer_key,
+    consumer_secret:      process.env.consumer_secret,
+    access_token:         process.env.access_token,
+    access_token_secret:  process.env.access_token_secret
+};
 
 // File system on
 var fs = require('fs');
@@ -170,7 +170,7 @@ function handleRequest(requests)
 {
     // Get first request from requests pool
     req = requests[0];
-    console.log("+ HANDLING REQUEST \"" + req.tweet_text + "\"");
+    console.log("+ HANDLING REQUEST " + req.id "\n");
 
     // Remove handled request
     requests.splice(requests.indexOf(req), 1);
