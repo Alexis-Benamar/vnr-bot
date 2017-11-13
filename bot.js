@@ -85,6 +85,8 @@ function mentioned(eventMsg)
 
                         // Todo: "You should look at how I work" if trigger is not correct
                         default:
+                            console.log("+ Default Reply");
+                            defaultReply(eventMsg);
                             break;
                     }
                 }
@@ -93,6 +95,23 @@ function mentioned(eventMsg)
     }
 }
 
+/*
+ * Default reply when none other triggers are activated
+ */
+function defaultReply(eventMsg)
+{
+    var tweet = {};
+    var params = {
+        encoding: 'base64'
+    };
+    var b64_image = fs.readFileSync('auto-images/rip.jpg', params);
+    T.post('media/upload', { media_data: b64_image }, function (err, data, response){
+        tweet.media_ids = new Array(data.media_id_string);
+        tweet.in_reply_to_status_id = eventMsg.id_str;
+        tweet.status = "@" + eventMsg.user.screen_name + " j'ai pas compris dsl";
+        tweetIt(tweet);
+    });
+}
 
 /*
  * Favorites every tweet from @IamNeggan
