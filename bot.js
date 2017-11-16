@@ -1,9 +1,10 @@
 /*
  * TODO LIST
  * - Add 'this is how I work' reply when not tweeted correctly
+ * - Clean code by merging 3 ifs in 1 with &&
  */
 
-
+// henlo
 console.log('henlo\n');
 
 var request = require('request');
@@ -12,6 +13,14 @@ var Twit = require('twit');
 // Keys are stored as variable environnements.
 // Check config-dummy.js to see what keys are needed.
 //var config = require('./config');
+// Prod or not prod
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').load();
+    console.log("// DEV //\n");
+} else {
+    console.log("// PROD //\n");
+}
+
 var config = {
     consumer_key:         process.env.consumer_key,
     consumer_secret:      process.env.consumer_secret,

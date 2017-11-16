@@ -1,1 +1,1 @@
-worker: node bot.js
+worker: NODE_ENV=production node bot.js
