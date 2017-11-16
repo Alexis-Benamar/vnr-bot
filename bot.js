@@ -5,7 +5,7 @@
  */
 
 // henlo
-console.log('henlo\n');
+console.log('\nhenlo\n');
 
 var request = require('request');
 var Twit = require('twit');
@@ -85,8 +85,8 @@ function mentioned(eventMsg)
                                     if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
                                         if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
                                         {
-                                            console.log('+ New REQUEST by: ', eventMsg.user.screen_name);
-                                            console.log('+ "'+eventMsg.text+'"\n');
+                                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name +
+                                                        '\n"'+eventMsg.text+'"\n');
 
                                             requests.push({
                                                 'id': eventMsg.timestamp_ms,
@@ -167,12 +167,14 @@ function tweetIt(tweet)
 
     function tweeted(err, data, response){
         if (err) {
-            console.log('/!\\ Error when tweeting.');
-            console.log(err);
+            console.log('/!\\ Error when tweeting.\n'
+                        + err);
 
             return false;
         } else {
-            console.log('+ REPLIED: ' + data.text + '\n');
+            console.log("+------------------------------+\n" +
+                        "| REPLIED: " + data.text + "\n" +
+                        "+------------------------------+\n");
 
             return true;
         }
