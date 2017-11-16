@@ -12,7 +12,6 @@ var Twit = require('twit');
 
 // Keys are stored as variable environnements.
 // Check config-dummy.js to see what keys are needed.
-//var config = require('./config');
 // Prod or not prod
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
@@ -75,7 +74,7 @@ function mentioned(eventMsg)
 
                             // New Episode trigger
                             case '!ne':
-                                console.log('+ New EPISODE by ', eventMsg.user.screen_name);
+                                console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
                                 randomEp(eventMsg);
                                 break;
 
@@ -86,7 +85,7 @@ function mentioned(eventMsg)
                                         if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
                                         {
                                             console.log('+ New REQUEST by: ' + eventMsg.user.screen_name +
-                                                        '\n"'+eventMsg.text+'"\n');
+                                                        '\n+ "'+eventMsg.text+'"\n');
 
                                             requests.push({
                                                 'id': eventMsg.timestamp_ms,
@@ -172,9 +171,9 @@ function tweetIt(tweet)
 
             return false;
         } else {
-            console.log("+------------------------------+\n" +
+            console.log("+------------------------+\n" +
                         "| REPLIED: " + data.text + "\n" +
-                        "+------------------------------+\n");
+                        "+------------------------+\n");
 
             return true;
         }
