@@ -63,47 +63,42 @@ function mentioned(eventMsg)
         if(!(eventMsg.is_quote_status)){
             // Confirm that the tweets has a 'vnrbot' mention
             // and is the first mention of the tweet
-            if (eventMsg.entities.hasOwnProperty('user_mentions')) {
-                if (eventMsg.entities.user_mentions.length > 0) {
-                    if (eventMsg.entities.user_mentions[0].screen_name === 'vnrbot')
-                    {
-                        // Look at the first word that is not a mention
-                        // "@vnrbot !test" would get '!test' selected
-                        var triggerString = eventMsg.text.split(" ");
-                        switch(triggerString[1]){
+            if (eventMsg.entities.hasOwnProperty('user_mentions') && eventMsg.entities.user_mentions.length > 0 && eventMsg.entities.user_mentions[0].screen_name === 'vnrbot' )
+            {
+                // Look at the first word that is not a mention
+                // "@vnrbot !test" would get '!test' selected
+                var triggerString = eventMsg.text.split(" ");
+                switch(triggerString[1]){
 
-                            // New Episode trigger
-                            case '!ne':
-                                console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
-                                randomEp(eventMsg);
-                                break;
+                    // New Episode trigger
+                    case '!ne':
+                        console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
+                        randomEp(eventMsg);
+                        break;
 
-                            // New request trigger
-                            case '#vnrthis':
-                                if(eventMsg.entities.hasOwnProperty('hashtags')){               // If there is hashtags
-                                    if(eventMsg.entities.hashtags.length > 0){                  // If there's at least 1 hashtag
-                                        if(eventMsg.entities.hashtags[0].text === 'vnrthis')    // If the 1st hashtag = #vnrthis
-                                        {
-                                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name +
-                                                        '\n+ "'+eventMsg.text+'"\n');
+                    // New request trigger
+                    case '#vnrthis':
+                        // If there is hashtags
+                        // If there's at least 1 hashtag
+                        // If the 1st hashtag = #vnrthis
+                        if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis')
+                        {
+                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name +
+                                        '\n+ "'+eventMsg.text+'"\n');
 
-                                            requests.push({
-                                                'id': eventMsg.timestamp_ms,
-                                                'from': eventMsg.user.screen_name,
-                                                'tweet_id': eventMsg.id_str,
-                                                'tweet_text': eventMsg.text
-                                            });
-                                        }
-                                    }
-                                }
-                                break;
-
-                            default:
-                                console.log("+ Default Reply");
-                                defaultReply(eventMsg);
-                                break;
+                            requests.push({
+                                'id': eventMsg.timestamp_ms,
+                                'from': eventMsg.user.screen_name,
+                                'tweet_id': eventMsg.id_str,
+                                'tweet_text': eventMsg.text
+                            });
                         }
-                    }
+                        break;
+
+                    default:
+                        console.log("+ Default Reply");
+                        defaultReply(eventMsg);
+                        break;
                 }
             }
         } else {
