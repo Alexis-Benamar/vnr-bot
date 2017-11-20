@@ -83,9 +83,7 @@ function mentioned(eventMsg)
                         // If the 1st hashtag = #vnrthis
                         if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis')
                         {
-                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name +
-                                        '\n+ "'+eventMsg.text+'"\n');
-
+                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name + '\n+ "' + eventMsg.text + '"\n');
                             requests.push({
                                 'id': eventMsg.timestamp_ms,
                                 'from': eventMsg.user.screen_name,
@@ -161,8 +159,7 @@ function tweetIt(tweet)
 
     function tweeted(err, data, response){
         if (err) {
-            console.log('/!\\ Error when tweeting.\n'
-                        + err);
+            console.log('/!\\ Error when tweeting.\n' + err);
 
             return false;
         } else {
