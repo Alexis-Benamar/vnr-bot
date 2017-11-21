@@ -41,4 +41,5 @@ config.js
 log/
 tweet.json
 images/
+legacy-code.js
 .env
