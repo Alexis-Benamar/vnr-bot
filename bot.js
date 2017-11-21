@@ -1,7 +1,7 @@
 /*
  * TODO LIST
  * - Add 'this is how I work' reply when not tweeted correctly
- * - Clean code by merging 3 ifs in 1 with &&
+ * - Split bot.js in other files
  */
 
 // henlo
@@ -52,9 +52,8 @@ negan_bot_stream.on('tweet', neganTweeted);
 function mentioned(eventMsg)
 {
     // React only if tweet is sent by someone else than vnrbot
-    if (!(eventMsg.user.screen_name === 'vnrbot'))
-    {
-        if(!(eventMsg.is_quote_status)){
+    if (!(eventMsg.user.screen_name === 'vnrbot')) {
+        if (!(eventMsg.is_quote_status)) {
             // Confirm that the tweets has a 'vnrbot' mention
             // and is the first mention of the tweet
             if (eventMsg.entities.hasOwnProperty('user_mentions') && eventMsg.entities.user_mentions.length > 0 && eventMsg.entities.user_mentions[0].screen_name === 'vnrbot' )
@@ -93,8 +92,7 @@ function mentioned(eventMsg)
             }
         } else {
             // Fav the tweet that quoted it
-            if(eventMsg.quoted_status.user.screen_name === "vnrbot")
-            {
+            if (eventMsg.quoted_status.user.screen_name === "vnrbot") {
                 T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
                     if (err) {
                         console.log("+ Error when faving: \n", err);
@@ -205,7 +203,7 @@ function saveTweet(eventMsg)
 {
     var json_tweet = JSON.stringify(eventMsg, null, 2);
     fs.writeFile('tweet.json', json_tweet, function(err) {
-        if(err) {
+        if (err) {
             console.log("- Error when writing json file: \n", err);
         } else {
             console.log("- Saved tweet successfully\n");
@@ -220,9 +218,8 @@ function randomEp(eventMsg)
 {
     var seriesList;
     fs.readFile('series.json', function (err, data) {
-        if(err) throw err;
-        else
-        {
+        if (err) throw err;
+        else {
             // Get series data from readfile response
             var seriesList = JSON.parse(data);
 
