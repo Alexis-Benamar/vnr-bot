@@ -113,32 +113,23 @@ setInterval(function ()
 {
     if (requests.length > 0)
     {
-        handleRequest(requests);
+        // Get first request from requests pool
+        req = requests[0];
+        console.log("+ HANDLING REQUEST " + req.id + "\n" +
+                    "+ From: " + req.from + "\n" +
+                    "+ Text: \""+ req.tweet_text + "\"");
+
+        // Remove handled request
+        requests.splice(requests.indexOf(req), 1);
+
+        var reply_tweet = {
+            'in_reply_to_status_id': req.tweet_id,
+            'status': '@'+ req.from + ' henlo'
+        }
+
+        tweetIt(reply_tweet);
     }
 }, 10000);
-
-/*
- * Request handler
- * Currently just reply "henlo" to the tweet
- */
-function handleRequest(requests)
-{
-    // Get first request from requests pool
-    req = requests[0];
-    console.log("+ HANDLING REQUEST " + req.id + "\n" +
-                "+ From: " + req.from + "\n" +
-                "+ Text: \""+ req.tweet_text + "\"");
-
-    // Remove handled request
-    requests.splice(requests.indexOf(req), 1);
-
-    var reply_tweet = {
-        'in_reply_to_status_id': req.tweet_id,
-        'status': '@'+ req.from + ' henlo'
-    }
-
-    tweetIt(reply_tweet);
-}
 
 /*
  * Default reply when none other triggers are activated
