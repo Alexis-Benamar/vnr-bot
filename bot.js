@@ -97,7 +97,7 @@ function mentioned(eventMsg)
                     if (err) {
                         console.log("+ Error when faving: \n", err);
                     } else {
-                        console.log("+ Favorited successfully");
+                        console.log("+ Favorited successfully: " + eventMsg.text + "\n");
                     }
                 });
             }
