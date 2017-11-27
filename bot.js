@@ -26,17 +26,13 @@ var config = {
     access_token:         process.env.access_token,
     access_token_secret:  process.env.access_token_secret
 };
-
 // File system on
 var fs = require('fs');
-
 // Initializing twitter bot
 var T = new Twit(config);
-
 // Listened streams
 var stream = T.stream('user');
 var negan_bot_stream = T.stream('statuses/filter', { follow: ['918196580443918336']});
-
 // RequestsPool
 var requests = [];
 
@@ -56,21 +52,18 @@ function mentioned(eventMsg)
         if (!(eventMsg.is_quote_status)) {
             // Confirm that the tweets has a 'vnrbot' mention
             // and is the first mention of the tweet
-            if (eventMsg.entities.hasOwnProperty('user_mentions') && eventMsg.entities.user_mentions.length > 0 && eventMsg.entities.user_mentions[0].screen_name === 'vnrbot' )
-            {
+            if (eventMsg.entities.hasOwnProperty('user_mentions') && eventMsg.entities.user_mentions.length > 0 && eventMsg.entities.user_mentions[0].screen_name === 'vnrbot') {
                 // Look at the first word that is not a mention
                 // "@vnrbot !test" would get '!test' selected
                 var triggerString = eventMsg.text.split(" ");
                 switch(triggerString[1]){
-
-                    // New Episode trigger
                     case '!ne':
+                        // New Episode trigger
                         console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
                         randomEp(eventMsg);
                         break;
-
-                    // New request trigger
                     case '#vnrthis':
+                        // New request trigger
                         // If there is hashtags && If there's at least 1 hashtag && If the 1st hashtag = #vnrthis
                         if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis')
                         {
@@ -83,7 +76,6 @@ function mentioned(eventMsg)
                             });
                         }
                         break;
-
                     default:
                         console.log("+ Default Reply");
                         defaultReply(eventMsg);
@@ -111,17 +103,14 @@ function mentioned(eventMsg)
  */
 setInterval(function ()
 {
-    if (requests.length > 0)
-    {
+    if (requests.length > 0) {
         // Get first request from requests pool
         req = requests[0];
         console.log("+ HANDLING REQUEST " + req.id + "\n" +
                     "+ From: " + req.from + "\n" +
                     "+ Text: \""+ req.tweet_text + "\"");
-
         // Remove handled request
         requests.splice(requests.indexOf(req), 1);
-
         var reply_tweet = {
             'in_reply_to_status_id': req.tweet_id,
             'status': '@'+ req.from + ' henlo'
@@ -155,7 +144,6 @@ function defaultReply(eventMsg)
 function neganTweeted(eventMsg)
 {
     console.log("+ IamNeggan tweeted: ", eventMsg.text);
-
     T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
         if (err) {
             console.log("+ Error when faving: \n", err);
@@ -172,16 +160,14 @@ function tweetIt(tweet)
 {
     T.post('statuses/update', tweet, tweeted);
 
-    function tweeted(err, data, response){
+    function tweeted(err, data, response) {
         if (err) {
             console.log('/!\\ Error when tweeting.\n' + err);
-
             return false;
         } else {
             console.log("+------------------------+\n" +
                         "| REPLIED: " + data.text + "\n" +
                         "+------------------------+\n");
-
             return true;
         }
     };
@@ -213,7 +199,6 @@ function randomEp(eventMsg)
         else {
             // Get series data from readfile response
             var seriesList = JSON.parse(data);
-
             // select rdm episode
             var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
