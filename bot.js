@@ -4,7 +4,6 @@
  * - Split bot.js in other files
  */
 
-// henlo
 console.log('\nhenlo\n');
 
 var request = require('request');
@@ -26,25 +25,19 @@ var config = {
     access_token:         process.env.access_token,
     access_token_secret:  process.env.access_token_secret
 };
-// File system on
-var fs = require('fs');
-// Initializing twitter bot
-var T = new Twit(config);
+var fs = require('fs');     // File system on
+var T = new Twit(config);   // Initializing twitter bot
+var requests = [];          // Initializing request pool
 // Listened streams
 var stream = T.stream('user');
 var negan_bot_stream = T.stream('statuses/filter', { follow: ['918196580443918336']});
-// RequestsPool
-var requests = [];
 
 // Start twitter streams
 stream.on('tweet', mentioned);
 negan_bot_stream.on('tweet', neganTweeted);
 
 
-/*
- * React to a tweet mentioning @vnrbot
- * Add a request to the request queue
- */
+/* React to a tweet mentioning @vnrbot by adding a request to the request queue */
 function mentioned(eventMsg)
 {
     // React only if tweet is sent by someone else than vnrbot
@@ -53,8 +46,7 @@ function mentioned(eventMsg)
             // Confirm that the tweets has a 'vnrbot' mention
             // and is the first mention of the tweet
             if (eventMsg.entities.hasOwnProperty('user_mentions') && eventMsg.entities.user_mentions.length > 0 && eventMsg.entities.user_mentions[0].screen_name === 'vnrbot') {
-                // Look at the first word that is not a mention
-                // "@vnrbot !test" would get '!test' selected
+                // Look at the first word that is not a mention -> "@vnrbot !test" would get '!test' selected
                 var triggerString = eventMsg.text.split(" ");
                 switch(triggerString[1]){
                     case '!ne':
@@ -97,10 +89,7 @@ function mentioned(eventMsg)
     }
 }
 
-/*
- * MAIN LOOP
- * Handle 1 requests every 10 seconds
- */
+/* MAIN LOOP - Handle 1 requests every 10 seconds */
 setInterval(function ()
 {
     if (requests.length > 0) {
@@ -120,9 +109,7 @@ setInterval(function ()
     }
 }, 10000);
 
-/*
- * Default reply when none other triggers are activated
- */
+/* Default reply when none other triggers are activated */
 function defaultReply(eventMsg)
 {
     var tweet = {};
@@ -138,9 +125,7 @@ function defaultReply(eventMsg)
     });
 }
 
-/*
- * Favorites every tweet from @IamNeggan
- */
+/* Favorites every tweet from @IamNeggan */
 function neganTweeted(eventMsg)
 {
     console.log("+ IamNeggan tweeted: ", eventMsg.text);
@@ -153,9 +138,7 @@ function neganTweeted(eventMsg)
     });
 }
 
-/*
- * Uploads a new tweet.
- */
+/* Uploads a new tweet. */
 function tweetIt(tweet)
 {
     T.post('statuses/update', tweet, tweeted);
@@ -173,9 +156,7 @@ function tweetIt(tweet)
     };
 }
 
-/*
- * Saves last recieved tweet in a json file
- */
+/* Saves last recieved tweet in a json file */
 function saveTweet(eventMsg)
 {
     var json_tweet = JSON.stringify(eventMsg, null, 2);
@@ -188,22 +169,17 @@ function saveTweet(eventMsg)
     });
 }
 
-/*
- * Pick random show to watch (rdm Season & rdm Episode)
- */
+/* Pick random show to watch (rdm Season & rdm Episode) */
 function randomEp(eventMsg)
 {
-    var seriesList;
     fs.readFile('series.json', function (err, data) {
         if (err) throw err;
         else {
             // Get series data from readfile response
             var seriesList = JSON.parse(data);
-            // select rdm episode
             var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
             var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
-
             var tweet = {
                 'in_reply_to_status_id': eventMsg.id_str,
                 'status':   '@' + eventMsg.user.screen_name + '\n' +
