@@ -6,19 +6,17 @@
 
 console.log('\nhenlo\n');
 
-var request = require('request');
-var Twit = require('twit');
-
+/* Initialize everything */
 // Keys are stored as variable environnements.
 // Check config-dummy.js to see what keys are needed.
-// Prod or not prod
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
     console.log("// DEV //\n");
 } else {
     console.log("// PROD //\n");
 }
-
+var request = require('request');
+var Twit = require('twit');
 var config = {
     consumer_key:         process.env.consumer_key,
     consumer_secret:      process.env.consumer_secret,
