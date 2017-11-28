@@ -26,6 +26,7 @@ var config = {
 var fs = require('fs');     // File system on
 var T = new Twit(config);   // Initializing twitter bot
 var requests = [];          // Initializing request pool
+
 // Listened streams
 var stream = T.stream('user');
 var negan_bot_stream = T.stream('statuses/filter', { follow: ['918196580443918336']});
@@ -36,8 +37,7 @@ negan_bot_stream.on('tweet', neganTweeted);
 
 
 /* React to a tweet mentioning @vnrbot by adding a request to the request queue */
-function mentioned(eventMsg)
-{
+function mentioned(eventMsg) {
     // React only if tweet is sent by someone else than vnrbot
     if (!(eventMsg.user.screen_name === 'vnrbot')) {
         if (!(eventMsg.is_quote_status)) {
@@ -55,8 +55,7 @@ function mentioned(eventMsg)
                     case '#vnrthis':
                         // New request trigger
                         // If there is hashtags && If there's at least 1 hashtag && If the 1st hashtag = #vnrthis
-                        if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis')
-                        {
+                        if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis') {
                             console.log('+ New REQUEST by: ' + eventMsg.user.screen_name + '\n+ "' + eventMsg.text + '"\n');
                             requests.push({
                                 'id': eventMsg.timestamp_ms,
@@ -88,8 +87,7 @@ function mentioned(eventMsg)
 }
 
 /* MAIN LOOP - Handle 1 requests every 10 seconds */
-setInterval(function ()
-{
+setInterval( function () {
     if (requests.length > 0) {
         // Get first request from requests pool
         req = requests[0];
@@ -105,11 +103,10 @@ setInterval(function ()
 
         tweetIt(reply_tweet);
     }
-}, 10000);
+}, 10000 );
 
 /* Default reply when none other triggers are activated */
-function defaultReply(eventMsg)
-{
+function defaultReply(eventMsg) {
     var tweet = {};
     var params = {
         encoding: 'base64'
@@ -124,8 +121,7 @@ function defaultReply(eventMsg)
 }
 
 /* Favorites every tweet from @IamNeggan */
-function neganTweeted(eventMsg)
-{
+function neganTweeted(eventMsg) {
     console.log("+ IamNeggan tweeted: ", eventMsg.text);
     T.post("favorites/create", {id: eventMsg.id_str}, function(err, data, response) {
         if (err) {
@@ -137,10 +133,8 @@ function neganTweeted(eventMsg)
 }
 
 /* Uploads a new tweet. */
-function tweetIt(tweet)
-{
+function tweetIt(tweet) {
     T.post('statuses/update', tweet, tweeted);
-
     function tweeted(err, data, response) {
         if (err) {
             console.log('/!\\ Error when tweeting.\n' + err);
@@ -155,8 +149,7 @@ function tweetIt(tweet)
 }
 
 /* Saves last recieved tweet in a json file */
-function saveTweet(eventMsg)
-{
+function saveTweet(eventMsg) {
     var json_tweet = JSON.stringify(eventMsg, null, 2);
     fs.writeFile('tweet.json', json_tweet, function(err) {
         if (err) {
@@ -168,8 +161,7 @@ function saveTweet(eventMsg)
 }
 
 /* Pick random show to watch (rdm Season & rdm Episode) */
-function randomEp(eventMsg)
-{
+function randomEp(eventMsg) {
     fs.readFile('series.json', function (err, data) {
         if (err) throw err;
         else {
