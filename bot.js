@@ -52,6 +52,9 @@ function mentioned(eventMsg) {
                         console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
                         randomEp(eventMsg);
                         break;
+                    case '!help':
+                        helpTweet(eventMsg);
+                        break;
                     case '#vnrthis':
                         // New request trigger
                         // If there is hashtags && If there's at least 1 hashtag && If the 1st hashtag = #vnrthis
@@ -118,6 +121,17 @@ function defaultReply(eventMsg) {
         tweet.status = "@" + eventMsg.user.screen_name + " j'ai pas compris dsl";
         tweetIt(tweet);
     });
+}
+
+/* Help tweet with all commands */
+function helpTweet(eventMsg) {
+    var tweet = {
+        'in_reply_to_status_id': eventMsg.id_str,
+        'status':   '@' + eventMsg.user.screen_name + ' This is how I work: \n' +
+                    'Tweet me an image with the #vnrthis hashtag just after the @ and I will (in a near future) make your image angrier.\n' +
+                    '\nRight now, I mostly reply \'henlo\' to everyone'
+    };
+    tweetIt(tweet);
 }
 
 /* Favorites every tweet from @IamNeggan */
