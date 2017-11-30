@@ -1,7 +1,5 @@
 /*
  * TODO LIST
- * - Add 'this is how I work' reply when not tweeted correctly
- * - Split bot.js in other files
  */
 
 console.log('\nhenlo\n');
@@ -53,20 +51,12 @@ function mentioned(eventMsg) {
                         randomEp(eventMsg);
                         break;
                     case '!help':
+                        // Help tweet trigger
                         helpTweet(eventMsg);
                         break;
                     case '#vnrthis':
                         // New request trigger
-                        // If there is hashtags && If there's at least 1 hashtag && If the 1st hashtag = #vnrthis
-                        if (eventMsg.entities.hasOwnProperty('hashtags') && eventMsg.entities.hashtags.length > 0 && eventMsg.entities.hashtags[0].text === 'vnrthis') {
-                            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name + '\n+ "' + eventMsg.text + '"\n');
-                            requests.push({
-                                'id': eventMsg.timestamp_ms,
-                                'from': eventMsg.user.screen_name,
-                                'tweet_id': eventMsg.id_str,
-                                'tweet_text': eventMsg.text
-                            });
-                        }
+                        addRequest(eventMsg);
                         break;
                     default:
                         console.log("+ Default Reply");
@@ -99,39 +89,92 @@ setInterval( function () {
                     "+ Text: \""+ req.tweet_text + "\"");
         // Remove handled request
         requests.splice(requests.indexOf(req), 1);
-        var reply_tweet = {
-            'in_reply_to_status_id': req.tweet_id,
-            'status': '@'+ req.from + ' henlo'
-        }
 
-        tweetIt(reply_tweet);
+        handleRequest(req);
     }
 }, 10000 );
 
+function addRequest(eventMsg) {
+    if (eventMsg.entities.hasOwnProperty('hashtags') &&
+        eventMsg.entities.hashtags.length > 0 &&
+        eventMsg.entities.hashtags[0].text === 'vnrthis' &&
+        eventMsg.hasOwnProperty('extended_entities') &&
+        eventMsg.extended_entities.media.length > 0) {
+
+        if(!(eventMsg.extended_entities.media[0].type === "photo")){
+            var params = {
+                encoding: 'base64'
+            }
+            var b64_image = fs.readFileSync('auto-images/rip.jpg', params);
+            T.post('media/upload', { media_data: b64_image }, function (err, data, response){
+                tweetIt({
+                    'media_ids': new Array(data.media_id_string),
+                    'in_reply_to_status_id': id,
+                    'status': '@' + from + ' sry, no gifs / videos allowed'
+                });
+            });
+        } else {
+            console.log('+ New REQUEST by: ' + eventMsg.user.screen_name + '\n+ "' + eventMsg.text + '"\n');
+            requests.push({
+                'id': eventMsg.timestamp_ms,
+                'from': eventMsg.user.screen_name,
+                'tweet_id': eventMsg.id_str,
+                'tweet_text': eventMsg.text,
+                'img': eventMsg.extended_entities.media[0]
+            });
+        }
+    } else {
+        helpTweet(eventMsg);
+    }
+}
+
+function handleRequest(req) {
+    request(req.img.media_url, {encoding: 'binary'}, function(error, response, body){
+        if(error){
+            console.log(error);
+        } else {
+            console.log('statusCode: ' + response.statusCode);
+            console.log('Content-Type: ' + response.headers['content-type']);
+
+            fs.writeFile('images/' + req.id + '-' + req.tweet_id + '-' + req.img.id_str + '.png', body, 'binary', function(err) {
+                if (err) {
+                    console.log("/!\\ Error when saving image:\n" + err + '\n');
+                } else {
+                    console.log("+ Saved image from "+ req.id +" successfully\n");
+                }
+            });
+        }
+    });
+    
+    tweetIt({
+        'in_reply_to_status_id': req.tweet_id,
+        'status': '@' + req.from + ' henlo'
+    });
+}
+
 /* Default reply when none other triggers are activated */
 function defaultReply(eventMsg) {
-    var tweet = {};
     var params = {
         encoding: 'base64'
     };
     var b64_image = fs.readFileSync('auto-images/rip.jpg', params);
     T.post('media/upload', { media_data: b64_image }, function (err, data, response){
-        tweet.media_ids = new Array(data.media_id_string);
-        tweet.in_reply_to_status_id = eventMsg.id_str;
-        tweet.status = "@" + eventMsg.user.screen_name + " j'ai pas compris dsl";
-        tweetIt(tweet);
+        tweetIt({
+            'media_ids': new Array(data.media_id_string),
+            'in_reply_to_status_id': eventMsg.id_str,
+            'status': "@" + eventMsg.user.screen_name + " j'ai pas compris dsl"
+        });
     });
 }
 
 /* Help tweet with all commands */
 function helpTweet(eventMsg) {
-    var tweet = {
+    tweetIt({
         'in_reply_to_status_id': eventMsg.id_str,
         'status':   '@' + eventMsg.user.screen_name + ' This is how I work: \n' +
                     'Tweet me an image with the #vnrthis hashtag just after the @ and I will (in a near future) make your image angrier.\n' +
                     '\nRight now, I mostly reply \'henlo\' to everyone'
-    };
-    tweetIt(tweet);
+    });
 }
 
 /* Favorites every tweet from @IamNeggan */
@@ -184,15 +227,13 @@ function randomEp(eventMsg) {
             var rdmShow = seriesList.series[Math.floor(Math.random() * seriesList.series.length)];
             var rdmSeason = Math.floor(Math.random() * rdmShow.seasons.length) + 1;
             var rdmEpisode = Math.floor(Math.random() * rdmShow.seasons[rdmSeason-1]) + 1;
-            var tweet = {
+            tweetIt({
                 'in_reply_to_status_id': eventMsg.id_str,
                 'status':   '@' + eventMsg.user.screen_name + '\n' +
                             '\nShow: ' + rdmShow.name +
                             '\nSeason ' + rdmSeason +
                             '\nEpisode ' + rdmEpisode + '\n'
-            };
-
-            tweetIt(tweet);
+            });
         }
     });
 }
