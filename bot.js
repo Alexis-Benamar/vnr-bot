@@ -45,12 +45,12 @@ function mentioned(eventMsg) {
                 // Look at the first word that is not a mention -> "@vnrbot !test" would get '!test' selected
                 var triggerString = eventMsg.text.split(" ");
                 switch(triggerString[1]){
-                    case '!ne':
+                    case '.ne':
                         // New Episode trigger
                         console.log('+ New EPISODE by: ' + eventMsg.user.screen_name);
                         randomEp(eventMsg);
                         break;
-                    case '!help':
+                    case '.help':
                         // Help tweet trigger
                         helpTweet(eventMsg);
                         break;
