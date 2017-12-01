@@ -94,6 +94,7 @@ setInterval( function () {
     }
 }, 10000 );
 
+/* Add a request if every condition is matched */
 function addRequest(eventMsg) {
     if (eventMsg.entities.hasOwnProperty('hashtags') &&
         eventMsg.entities.hashtags.length > 0 &&
@@ -109,8 +110,8 @@ function addRequest(eventMsg) {
             T.post('media/upload', { media_data: b64_image }, function (err, data, response){
                 tweetIt({
                     'media_ids': new Array(data.media_id_string),
-                    'in_reply_to_status_id': id,
-                    'status': '@' + from + ' sry, no gifs / videos allowed'
+                    'in_reply_to_status_id': eventMsg.id_str,
+                    'status': '@' + eventMsg.user.screen_name + ' sry, no gifs / videos allowed'
                 });
             });
         } else {
@@ -128,6 +129,7 @@ function addRequest(eventMsg) {
     }
 }
 
+/* Handle the first request from the request pool */
 function handleRequest(req) {
     request(req.img.media_url, {encoding: 'binary'}, function(error, response, body){
         if(error){
@@ -145,7 +147,7 @@ function handleRequest(req) {
             });
         }
     });
-    
+
     tweetIt({
         'in_reply_to_status_id': req.tweet_id,
         'status': '@' + req.from + ' henlo'
