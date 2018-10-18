@@ -16,12 +16,12 @@ const config = {
     access_token:         process.env.access_token,
     access_token_secret:  process.env.access_token_secret
 };
-const fs = require('fs');     // File system on
-const T = new Twit(config);   // Initializing twitter bot
+const fs = require('fs');   // File system on
+const T = new Twit(config); // Initializing twitter bot
 let requests = [];          // Initializing request pool
 
 
-// Listened streams
+/* Listened streams */
 const stream = T.stream('user');
 stream.on('tweet', (eventMsg) => {
     
@@ -29,8 +29,7 @@ stream.on('tweet', (eventMsg) => {
     if (!(eventMsg.user.screen_name === 'vnrbot')) {
         if (!(eventMsg.is_quote_status)) {
 
-            // Confirm that the tweets has a 'vnrbot' mention
-            // and is the first mention of the tweet
+            // Confirm that the tweets has a 'vnrbot' mention and is the first mention of the tweet
             if (eventMsg.entities.hasOwnProperty('user_mentions') &&
                 eventMsg.entities.user_mentions.length > 0 &&
                 eventMsg.entities.user_mentions[0].screen_name === 'vnrbot') {
