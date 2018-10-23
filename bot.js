@@ -1,6 +1,6 @@
 console.log('\nhenlo\n');
 
-/* Initialize everything */
+// Initialize everything
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
     console.log("// DEV //\n");
@@ -21,7 +21,7 @@ const T = new Twit(config); // Initializing twitter bot
 let requests = [];          // Initializing request pool
 
 
-/* Listened streams */
+// Listened streams
 const stream = T.stream('user');
 stream.on('tweet', (eventMsg) => {
     
@@ -67,7 +67,7 @@ stream.on('tweet', (eventMsg) => {
     }
 });
 
-/* MAIN LOOP - Handle 1 requests every 10 seconds */
+// MAIN LOOP - Handle 1 requests every 10 seconds
 setInterval(() => {
     if (requests.length > 0) {
         
@@ -82,9 +82,9 @@ setInterval(() => {
 
         handleRequest(req);
     }
-}, 10000 );
+}, 1000 * 10);
 
-/* Add a request if every condition is matched */
+// Add a request if every condition is matched
 function addRequest(eventMsg) {
     if (eventMsg.entities.hasOwnProperty('hashtags') &&
         eventMsg.entities.hashtags.length > 0 &&
@@ -120,7 +120,7 @@ function addRequest(eventMsg) {
     }
 }
 
-/* Handle the first request from the request pool */
+// Handle the first request from the request pool
 function handleRequest(req) {
     request(req.img.media_url, {encoding: 'binary'}, (error, response, body) => {
         if(error){
@@ -140,7 +140,7 @@ function handleRequest(req) {
     });
 }
 
-/* Default reply when none other triggers are activated */
+// Default reply when none other triggers are activated
 function defaultReply(eventMsg) {
     const params = {
         encoding: 'base64'
@@ -156,7 +156,7 @@ function defaultReply(eventMsg) {
     });
 }
 
-/* Help tweet with all commands */
+// Help tweet with all commands
 function helpTweet(eventMsg) {
     tweetIt({
         'in_reply_to_status_id': eventMsg.id_str,
@@ -167,7 +167,7 @@ function helpTweet(eventMsg) {
 }
 
 
-/* Uploads a new tweet. */
+// Uploads a new tweet
 function tweetIt(tweet) {
     T.post('statuses/update', tweet, (err, data, response) => {
         if (err) {
