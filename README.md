@@ -24,4 +24,4 @@ There's also a hidden feature but you don't need that one
 
 Made with the help of [Daniel Schiffman's](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6atTSxoRiVnSuOn6JHnq2yV) amazing tutorials
 
-Copyright © 2017, [Alexis Benamar](https://alexis-benamar.github.io)
+Copyright © 2019, [Alexis Benamar](https://alexis-benamar.github.io)
